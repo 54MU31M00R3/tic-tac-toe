@@ -157,5 +157,56 @@ const match = (function () {
         }
     };
     return {setPlayers, beginMatch}
- })();
+})();
+
+function createPlayer (name) {
+    const xSpacesHeld = {};
+    const ySpacesHeld = {};
+    const spacesHeld = [];
+    let symbol;
  
+ 
+    function takeTurn () {
+        let desiredSpace = prompt("What position would you like?");
+        let turnCompleted = false
+ 
+ 
+        while (!turnCompleted){
+            try {
+                const {x, y, isValid} = gameBoard.fillSpace(desiredSpace, this.symbol)
+                if (isValid){
+                    console.log("this free space has now been taken.")
+   
+                    if (xSpacesHeld[`${x}`] !== undefined){
+                        xSpacesHeld[`${x}`] += 1
+                    } else {
+                        xSpacesHeld[`${x}`] = 1
+                    }
+       
+                    if (ySpacesHeld[`${y}`] !== undefined){
+                        ySpacesHeld[`${y}`] += 1
+                    } else {
+                        ySpacesHeld[`${y}`] = 1
+                    }
+   
+                    spacesHeld.push([x,y]);
+   
+                    turnCompleted = true
+                } else {
+                    console.log("that space is already taken, try another.");
+                    desiredSpace = prompt("What position would you like?");
+                }
+            } catch {
+                console.log("that space is invalid, try another.");
+                desiredSpace = prompt("What position would you like?");
+            }
+        }
+    }
+    return {name, symbol, takeTurn, xSpacesHeld, ySpacesHeld, spacesHeld}
+};
+ 
+const players = [createPlayer("sam"),createPlayer("sarah")];
+
+match.setPlayers(players);
+
+match.beginMatch();
