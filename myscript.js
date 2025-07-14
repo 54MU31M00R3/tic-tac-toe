@@ -70,3 +70,92 @@ const gameBoard = (function () {
 
     return {viewSpaces, fillSpace, spaces}
 })();
+
+const match = (function () {
+    let ongoingMatch = false;
+    let player1, player2;
+    let turn = 0;
+    let activePlayer;
+ 
+ 
+    function setPlayers(players){
+        if (players.length > 2){
+            throw Error("too many players.");
+        }
+ 
+ 
+        player1 = players[0];
+        player2 = players[1];
+        player1.symbol = "X";
+        player2.symbol = "0";
+ 
+ 
+        activePlayer = player1;
+    };
+ 
+ 
+    function swapActivePlayer(){
+        if (player1 === activePlayer) {
+            activePlayer = player2;
+        } else {
+            activePlayer = player1;
+        };
+    };
+ 
+ 
+    function beginMatch(){
+        ongoingMatch = true
+        gameBoard.viewSpaces();
+ 
+ 
+        while (ongoingMatch) {
+            activePlayer.takeTurn();
+            turn++;
+            checkWinner(activePlayer.symbol);
+            swapActivePlayer();
+            gameBoard.viewSpaces();
+        };
+    };
+ 
+ 
+    function checkWinner(symbol) {
+ 
+ 
+        for (const value in activePlayer.xSpacesHeld) {
+            if (activePlayer.xSpacesHeld[value] === 3) {
+                endGame("win");
+            };
+        }
+ 
+ 
+        for (const value in activePlayer.ySpacesHeld) {
+            if (activePlayer.ySpacesHeld[value] === 3) {
+                endGame("win");
+            };
+        }
+ 
+ 
+        if (gameBoard.spaces[1][1] === symbol &&
+        (gameBoard.spaces[0][0] === symbol ||  gameBoard.spaces[0][2] === symbol) &&
+        (gameBoard.spaces[2][0] === symbol || gameBoard.spaces[2][2] === symbol)){
+            endGame("win");
+        }
+ 
+ 
+        if (turn === 9) {
+            endGame("draw");
+        }
+    };
+ 
+ 
+    function endGame (outcome) {
+        ongoingMatch = false
+        if (outcome === "win"){
+            console.log(`Congratulations! ${activePlayer.name} has won the game.`)
+        } else if (outcome === "draw") {
+            console.log("DRAW")
+        }
+    };
+    return {setPlayers, beginMatch}
+ })();
+ 
