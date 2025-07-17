@@ -205,8 +205,8 @@ function createPlayer (name) {
     return {name, symbol, takeTurn, xSpacesHeld, ySpacesHeld, spacesHeld}
 };
  
-const players = [createPlayer("sam"),createPlayer("sarah")];
+// const players = [createPlayer("sam"),createPlayer("sarah")];
 
-match.setPlayers(players);
+// match.setPlayers(players);
 
-match.beginMatch();
+// match.beginMatch();
