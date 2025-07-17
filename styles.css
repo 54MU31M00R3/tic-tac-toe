@@ -1,0 +1,36 @@
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board {
+    height: 500px;
+    width: 500px;
+    padding: 25px;
+    display: grid;
+    grid-template-columns: 1fr 10px 1fr 10px 1fr;
+    grid-template-rows: 1fr 10px 1fr 10px 1fr;
+}
+
+.vertical-gap {
+    background-color: black;
+}
+
+.horizontal-gap{
+    background-color: black;
+    grid-column: 1/6;
+}
