@@ -5,6 +5,7 @@ body {
 
 .container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -18,12 +19,11 @@ body {
 }
 
 .game-board {
-    height: 500px;
-    width: 500px;
+    height: 100%;
     padding: 25px;
     display: grid;
-    grid-template-columns: 1fr 10px 1fr 10px 1fr;
-    grid-template-rows: 1fr 10px 1fr 10px 1fr;
+    grid-template-columns: 150px 10px 150px 10px 150px;
+    grid-template-rows: 150px 10px 150px 10px 150px;
     color: white;
 }
 
@@ -35,3 +35,30 @@ body {
     background-color: black;
     grid-column: 1/6;
 }
+
+.space {
+    position: relative;
+}
+
+.symbol {
+    height: 150px;
+    width: 150px;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+fieldset {
+    padding: 16px;
+    display: flex;
+}
+
+label, input {
+    display: block;
+    margin: 8px;
+}
+
+.start-button {
+    margin-top: 16px;
+}
+

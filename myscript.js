@@ -233,7 +233,9 @@ startButton.addEventListener("click", () => {
     const player2 = document.querySelector("#p-name-2");
 
     players.push(createPlayer(player1.textContent), createPlayer(player2.textContent));
-    match.setPlayers(players)
+    match.setPlayers(players);
 
-    match.beginMatch()
+    match.beginMatch();
+    
+    startButton.innerHTML = "Restart";
 })
