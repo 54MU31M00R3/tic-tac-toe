@@ -107,19 +107,20 @@ const match = (function () {
  
         const spaces = document.querySelectorAll(".space");
         spaces.forEach((space) => {
-            space.addEventListener("click", () => {
-                const validMove = activePlayer.takeTurn(space.textContent);
-                
-                if (validMove) {
-                    space.textContent = activePlayer.symbol
-                    turn++;
-                    checkWinner(activePlayer.symbol);
-                    swapActivePlayer();
-                }
-            })
+            space.addEventListener("click", processTurn, { once: true})
         })
     };
  
+    function processTurn() {
+        const validMove = activePlayer.takeTurn(this.textContent);
+                
+        if (validMove) {
+            this.textContent = activePlayer.symbol
+            turn++;
+            checkWinner(activePlayer.symbol);
+            swapActivePlayer();
+        }
+    }
  
     function checkWinner(symbol) {
  
@@ -152,7 +153,12 @@ const match = (function () {
  
  
     function endGame (outcome) {
-        ongoingMatch = false
+        
+        const spaces = document.querySelectorAll(".space");
+        spaces.forEach((space) => {
+            space.removeEventListener("click", processTurn, { once: true})
+        })
+
         if (outcome === "win"){
             console.log(`Congratulations! ${activePlayer.name} has won the game.`)
         } else if (outcome === "draw") {
