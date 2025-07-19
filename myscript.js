@@ -104,17 +104,20 @@ const match = (function () {
  
  
     function beginMatch(){
-        ongoingMatch = true
-        gameBoard.viewSpaces();
  
- 
-        while (ongoingMatch) {
-            activePlayer.takeTurn();
-            turn++;
-            checkWinner(activePlayer.symbol);
-            swapActivePlayer();
-            gameBoard.viewSpaces();
-        };
+        const spaces = document.querySelectorAll(".space");
+        spaces.forEach((space) => {
+            space.addEventListener("click", () => {
+                const validMove = activePlayer.takeTurn(space.textContent);
+                
+                if (validMove) {
+                    space.textContent = activePlayer.symbol
+                    turn++;
+                    checkWinner(activePlayer.symbol);
+                    swapActivePlayer();
+                }
+            })
+        })
     };
  
  
@@ -166,45 +169,48 @@ function createPlayer (name) {
     let symbol;
  
  
-    function takeTurn () {
-        let desiredSpace = prompt("What position would you like?");
-        let turnCompleted = false
- 
- 
-        while (!turnCompleted){
-            try {
-                const {x, y, isValid} = gameBoard.fillSpace(desiredSpace, this.symbol)
-                if (isValid){
-                    console.log("this free space has now been taken.")
-   
-                    if (xSpacesHeld[`${x}`] !== undefined){
-                        xSpacesHeld[`${x}`] += 1
-                    } else {
-                        xSpacesHeld[`${x}`] = 1
-                    }
-       
-                    if (ySpacesHeld[`${y}`] !== undefined){
-                        ySpacesHeld[`${y}`] += 1
-                    } else {
-                        ySpacesHeld[`${y}`] = 1
-                    }
-   
-                    spacesHeld.push([x,y]);
-   
-                    turnCompleted = true
-                } else {
-                    console.log("that space is already taken, try another.");
-                    desiredSpace = prompt("What position would you like?");
-                }
-            } catch {
-                console.log("that space is invalid, try another.");
-                desiredSpace = prompt("What position would you like?");
+    function takeTurn (desiredSpace) {
+        
+        const {x, y, isValid} = gameBoard.fillSpace(desiredSpace, this.symbol)
+
+        if (isValid){
+            console.log("this free space has now been taken.")
+
+            if (xSpacesHeld[`${x}`] !== undefined){
+                xSpacesHeld[`${x}`] += 1
+            } else {
+                xSpacesHeld[`${x}`] = 1
             }
+
+            if (ySpacesHeld[`${y}`] !== undefined){
+                ySpacesHeld[`${y}`] += 1
+            } else {
+                ySpacesHeld[`${y}`] = 1
+            }
+
+            spacesHeld.push([x,y]);
+        } else {
+            console.log("this space is not available")
         }
+
+        return isValid;
     }
     return {name, symbol, takeTurn, xSpacesHeld, ySpacesHeld, spacesHeld}
 };
  
+const startButton = document.querySelector(".start-button")
+
+startButton.addEventListener("click", () => {
+    const players = [];
+    const player1 = document.querySelector("#p-name-1");
+    const player2 = document.querySelector("#p-name-2");
+
+    players.push(createPlayer(player1.textContent), createPlayer(player2.textContent));
+    match.setPlayers(players)
+
+    match.beginMatch()
+})
+
 // const players = [createPlayer("sam"),createPlayer("sarah")];
 
 // match.setPlayers(players);
