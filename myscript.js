@@ -1,9 +1,13 @@
 const gameBoard = (function () {
-    const spaces = [
-        new Array(3).fill(null),
-        new Array(3).fill(null),
-        new Array(3).fill(null)
-    ];
+    let spaces;
+
+    function refreshSpaces() {
+        spaces = [
+            new Array(3).fill(null),
+            new Array(3).fill(null),
+            new Array(3).fill(null)
+        ];
+    }
 
     function viewSpaces () {
         for (let i = 0; i < spaces.length; i++) {
@@ -86,8 +90,8 @@ const match = (function () {
  
         player1 = players[0];
         player2 = players[1];
-        player1.symbol = "X";
-        player2.symbol = "0";
+        player1.symbol = "./gameboard-assets/alpha-x.svg";
+        player2.symbol = "./gameboard-assets/alpha-o.svg";
  
  
         activePlayer = player1;
@@ -105,6 +109,7 @@ const match = (function () {
  
     function beginMatch(){
  
+        gameBoard.refreshSpaces();
         const spaces = document.querySelectorAll(".space");
         spaces.forEach((space) => {
             space.addEventListener("click", processTurn, { once: true})
