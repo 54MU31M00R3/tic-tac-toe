@@ -1,5 +1,9 @@
 const gameBoard = (function () {
-    let spaces;
+    let spaces = [
+        new Array(3).fill(null),
+        new Array(3).fill(null),
+        new Array(3).fill(null)
+    ];
 
     function refreshSpaces() {
         spaces = [
@@ -72,11 +76,10 @@ const gameBoard = (function () {
         
     };
 
-    return {viewSpaces, fillSpace, spaces}
+    return {viewSpaces, fillSpace, spaces, refreshSpaces}
 })();
 
 const match = (function () {
-    let ongoingMatch = false;
     let player1, player2;
     let turn = 0;
     let activePlayer;
@@ -110,29 +113,39 @@ const match = (function () {
     function beginMatch(){
  
         gameBoard.refreshSpaces();
+
+        const symbolSpaces = document.querySelectorAll(".symbol")
+        symbolSpaces.forEach((space) => {
+            space.remove();
+        })
+
         const spaces = document.querySelectorAll(".space");
         spaces.forEach((space) => {
             space.addEventListener("click", processTurn, { once: true})
-        })
+        });
     };
  
     function processTurn() {
         const validMove = activePlayer.takeTurn(this.textContent);
                 
         if (validMove) {
-            this.textContent = activePlayer.symbol
+            const symbolSpace = document.createElement("img")
+            symbolSpace.src = activePlayer.symbol;
+            symbolSpace.className = "symbol";
+            this.appendChild(symbolSpace);
             turn++;
-            checkWinner(activePlayer.symbol);
+            checkWinner();
             swapActivePlayer();
         }
     }
  
-    function checkWinner(symbol) {
+    function checkWinner() {
  
  
         for (const value in activePlayer.xSpacesHeld) {
             if (activePlayer.xSpacesHeld[value] === 3) {
                 endGame("win");
+                return;
             };
         }
  
@@ -140,19 +153,22 @@ const match = (function () {
         for (const value in activePlayer.ySpacesHeld) {
             if (activePlayer.ySpacesHeld[value] === 3) {
                 endGame("win");
+                return;
             };
         }
  
  
-        if (gameBoard.spaces[1][1] === symbol &&
-        (gameBoard.spaces[0][0] === symbol ||  gameBoard.spaces[0][2] === symbol) &&
-        (gameBoard.spaces[2][0] === symbol || gameBoard.spaces[2][2] === symbol)){
+        if ((gameBoard.spaces[1][1] === activePlayer.symbol) &&
+        (gameBoard.spaces[0][0] === activePlayer.symbol ||  gameBoard.spaces[0][2] === activePlayer.symbol) &&
+        (gameBoard.spaces[2][0] === activePlayer.symbol || gameBoard.spaces[2][2] === activePlayer.symbol)){
             endGame("win");
+            return;
         }
  
  
         if (turn === 9) {
             endGame("draw");
+            return;
         }
     };
  
@@ -221,9 +237,3 @@ startButton.addEventListener("click", () => {
 
     match.beginMatch()
 })
-
-// const players = [createPlayer("sam"),createPlayer("sarah")];
-
-// match.setPlayers(players);
-
-// match.beginMatch();
