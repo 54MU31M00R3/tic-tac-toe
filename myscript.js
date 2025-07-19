@@ -6,7 +6,7 @@ const gameBoard = (function () {
     ];
 
     function refreshSpaces() {
-        spaces = [
+        this.spaces = [
             new Array(3).fill(null),
             new Array(3).fill(null),
             new Array(3).fill(null)
@@ -67,7 +67,7 @@ const gameBoard = (function () {
         };
 
         if (spaces[y][x] === null){
-            spaces[y][x] = playerSymbol;
+            this.spaces[y][x] = playerSymbol;
             return { x, y, isValid: true};
         } else {
             console.log("that position is taken.");
@@ -166,8 +166,8 @@ const match = (function () {
  
  
         if ((gameBoard.spaces[1][1] === activePlayer.symbol) &&
-        (gameBoard.spaces[0][0] === activePlayer.symbol ||  gameBoard.spaces[0][2] === activePlayer.symbol) &&
-        (gameBoard.spaces[2][0] === activePlayer.symbol || gameBoard.spaces[2][2] === activePlayer.symbol)){
+        (gameBoard.spaces[0][0] === activePlayer.symbol ||  gameBoard.spaces[2][0] === activePlayer.symbol) &&
+        (gameBoard.spaces[0][2] === activePlayer.symbol || gameBoard.spaces[2][2] === activePlayer.symbol)){
             return endGame("win");
         }
  
