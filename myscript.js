@@ -83,6 +83,7 @@ const match = (function () {
     let player1, player2;
     let turn = 0;
     let activePlayer;
+    const header = document.querySelector("h1")
  
  
     function setPlayers(players){
@@ -113,6 +114,7 @@ const match = (function () {
     function beginMatch(){
  
         gameBoard.refreshSpaces();
+        turn = 0;
 
         const symbolSpaces = document.querySelectorAll(".symbol")
         symbolSpaces.forEach((space) => {
@@ -123,6 +125,8 @@ const match = (function () {
         spaces.forEach((space) => {
             space.addEventListener("click", processTurn, { once: true})
         });
+
+        header.textContent = `It's ${activePlayer.name}'s turn`;
     };
  
     function processTurn() {
@@ -134,8 +138,13 @@ const match = (function () {
             symbolSpace.className = "symbol";
             this.appendChild(symbolSpace);
             turn++;
-            checkWinner();
-            swapActivePlayer();
+            const gameFinished = checkWinner();
+            
+            if (!gameFinished){
+                swapActivePlayer();
+                header.textContent = `It's ${activePlayer.name}'s turn`;
+
+            };
         }
     }
  
@@ -144,16 +153,14 @@ const match = (function () {
  
         for (const value in activePlayer.xSpacesHeld) {
             if (activePlayer.xSpacesHeld[value] === 3) {
-                endGame("win");
-                return;
+                return endGame("win");
             };
         }
  
  
         for (const value in activePlayer.ySpacesHeld) {
             if (activePlayer.ySpacesHeld[value] === 3) {
-                endGame("win");
-                return;
+                return endGame("win");;
             };
         }
  
@@ -161,15 +168,15 @@ const match = (function () {
         if ((gameBoard.spaces[1][1] === activePlayer.symbol) &&
         (gameBoard.spaces[0][0] === activePlayer.symbol ||  gameBoard.spaces[0][2] === activePlayer.symbol) &&
         (gameBoard.spaces[2][0] === activePlayer.symbol || gameBoard.spaces[2][2] === activePlayer.symbol)){
-            endGame("win");
-            return;
+            return endGame("win");
         }
  
  
         if (turn === 9) {
-            endGame("draw");
-            return;
+            return endGame("draw");
         }
+
+        return false;
     };
  
  
@@ -181,10 +188,13 @@ const match = (function () {
         })
 
         if (outcome === "win"){
-            console.log(`Congratulations! ${activePlayer.name} has won the game.`)
+            header.textContent = `Congratulations! ${activePlayer.name} has won the game.`;
+
         } else if (outcome === "draw") {
-            console.log("DRAW")
+            header.textContent = "DRAW";
         }
+
+        return true;
     };
     return {setPlayers, beginMatch}
 })();
@@ -232,10 +242,10 @@ startButton.addEventListener("click", () => {
     const player1 = document.querySelector("#p-name-1");
     const player2 = document.querySelector("#p-name-2");
 
-    players.push(createPlayer(player1.textContent), createPlayer(player2.textContent));
+    players.push(createPlayer(player1.value), createPlayer(player2.value));
     match.setPlayers(players);
 
     match.beginMatch();
-    
+
     startButton.innerHTML = "Restart";
 })
